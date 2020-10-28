@@ -1,15 +1,13 @@
 package com.imvc;
 
-import java.util.ArrayList;
-
-import com.imvc.modelo.Usuario;
-
 public class Application {
 
 	public static void main(String[] args) {
+		
+		
 		// TODO Auto-generated method stub
 		
-		Usuario usuario = new Usuario();
+//		Usuario usuario = new Usuario();
 //		usuario.setEmail("lucas@gmail.com");
 //		usuario.setSenha("7885");
 //		usuario.setCpf("000.054.080-00");
@@ -49,15 +47,15 @@ public class Application {
 //			ex.printStackTrace();
 //		}
 //		
-		
-		try {
-			usuario.read(2); // buscar no banco de dados um usuario
-			System.out.println(usuario);
-			usuario.delete();
-			System.out.println("usuario deletado com sucesso!");
-		} catch(Exception ex) { 
-			System.out.println("usuario nao foi encontrado");
-		}
+//		
+//		try {
+//			usuario.read(2); // buscar no banco de dados um usuario
+//			System.out.println(usuario);
+//			usuario.delete();
+//			System.out.println("usuario deletado com sucesso!");
+//		} catch(Exception ex) { 
+//			System.out.println("usuario nao foi encontrado");
+//		}
 	}
 	
 

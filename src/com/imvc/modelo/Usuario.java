@@ -3,6 +3,7 @@ package com.imvc.modelo;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import com.imvc.conection.Conexao;
@@ -67,7 +68,7 @@ public class Usuario {
         connection.AbreConexao();
         String sql = "INSERT INTO users (email,senha, cpf) VALUES (?,?,?) ";
         
-        PreparedStatement statement = connection.getConexao().prepareStatement(sql);
+        PreparedStatement statement = connection.getConexao().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         
         statement.setString(1, this.email);
         statement.setString(2, this.senha);
@@ -78,6 +79,10 @@ public class Usuario {
         
         if ( affectedRows == 0 ){
             throw new Exception("Não foi poossivel criar a tarefa");
+        }
+        ResultSet generatedKeys = statement.getGeneratedKeys();
+        if(generatedKeys.next()){
+            this.codigo = generatedKeys.getInt(1);
         }
        
         connection.FechaConexao();
@@ -98,7 +103,10 @@ public class Usuario {
 	        } else {
 	            throw new Exception("usuario não encontrado");
 	        }
-	                       
+	        ResultSet generatedKeys = statement.getGeneratedKeys();
+	        if(generatedKeys.next()){
+	            this.codigo = generatedKeys.getInt(1);
+	        }           
 	        connection.FechaConexao();
 	}
 	 public ArrayList<Usuario> All() throws SQLException{
