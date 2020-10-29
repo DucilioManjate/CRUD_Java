@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.json.JSONObject;
+
 import com.imvc.conection.Conexao;
 
 public class Usuario {
@@ -103,11 +105,9 @@ public class Usuario {
 	        } else {
 	            throw new Exception("usuario não encontrado");
 	        }
-	        ResultSet generatedKeys = statement.getGeneratedKeys();
-	        if(generatedKeys.next()){
-	            this.codigo = generatedKeys.getInt(1);
-	        }           
+	       
 	        connection.FechaConexao();
+	       
 	}
 	 public ArrayList<Usuario> All() throws SQLException{
 	        connection.AbreConexao();
@@ -141,7 +141,8 @@ public class Usuario {
 	        
 	        connection.FechaConexao();
 	    }
-	 public void delete() throws SQLException {
+	   
+	public void delete() throws SQLException {
 	        connection.AbreConexao();
 	        String sql = "DELETE FROM users WHERE codigo = ?";
 	        PreparedStatement statement = connection.getConexao().prepareStatement(sql);

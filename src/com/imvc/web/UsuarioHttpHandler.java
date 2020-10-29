@@ -27,12 +27,137 @@ public class UsuarioHttpHandler implements HttpHandler {
           case "POST" : 
           	handlePostRequest(httpExchange);
           	break;
+          case "DELETE" :
+        	  handleDeleteRequest(httpExchange);
+        	  break;
+          case "PUT" :
+        	  handlePutRequest(httpExchange);
+        	  break;
       }
 		
 		// TODO Auto-generated method stub
 
 	}
-	  private void handleGetRequest(HttpExchange httpExchange) throws IOException {
+	  
+	private void handlePutRequest(HttpExchange httpExchange) {
+		UsuarioController controller = new UsuarioController();
+		  String request_uri = httpExchange.getRequestURI().toString();
+	     
+	        int codigo = 0;  
+	        JSONObject json;
+	        
+	        try {
+              codigo = Integer.valueOf(request_uri.split("/")[2]);
+              OutputStream outStream = httpExchange.getResponseBody();
+   	       
+  	        InputStreamReader isr = new InputStreamReader(httpExchange.getRequestBody(), "utf-8");
+  	        BufferedReader br = new BufferedReader(isr);
+  	        StringBuilder buf = new StringBuilder();
+  	        
+  	        int b;
+  	        while((b = br.read()) != -1 ){
+  	            buf.append((char) b);
+  	        }
+  	        
+  	        br.close();
+  	        isr.close();
+  	        try {
+  		        json = new  JSONObject(buf.toString());		        
+  		        JSONObject jsonResponse = controller.update(json, codigo);
+  		        httpExchange.sendResponseHeaders(200,jsonResponse.toString().length());
+  		        outStream.write(jsonResponse.toString().getBytes()); 
+  	        }catch(Exception ex) {
+  	        	ex.printStackTrace();
+  	        }
+  	         
+  	        System.out.println(buf.toString());
+  	        outStream.flush();
+  	        outStream.close();
+  	        
+              
+              
+              
+              
+              
+              
+              
+          } catch (IOException ex) {
+          	Logger.getLogger(UsuarioHttpHandler.class.getName()).log(Level.SEVERE, null, ex);
+              
+          	json = new JSONObject();
+              
+              try {
+					json.put("status", "server error");
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+              
+              try {
+					httpExchange.sendResponseHeaders(500, json.toString().length());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+          }
+
+		  
+	    
+		  
+	}
+	private void handleDeleteRequest(HttpExchange httpExchange) {
+		  UsuarioController controller = new UsuarioController();
+		  String request_uri = httpExchange.getRequestURI().toString();
+	     
+	        int codigo = 0;  
+	        JSONObject json;
+	        
+	        try {
+                codigo = Integer.valueOf(request_uri.split("/")[2]);
+                System.out.println(codigo);
+               controller.delete(codigo);
+                httpExchange.sendResponseHeaders(204, 0);
+            } catch (SQLException ex) {
+            	Logger.getLogger(UsuarioHttpHandler.class.getName()).log(Level.SEVERE, null, ex);
+            	json = new JSONObject();
+                try {
+					json.put("status", "not found");
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+                try {
+					httpExchange.sendResponseHeaders(404, json.toString().length());
+				} catch (IOException e) {
+					
+					e.printStackTrace();
+				}
+            } catch (IOException ex) {
+            	Logger.getLogger(UsuarioHttpHandler.class.getName()).log(Level.SEVERE, null, ex);
+                
+            	json = new JSONObject();
+                
+                try {
+					json.put("status", "server error");
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+                
+                try {
+					httpExchange.sendResponseHeaders(500, json.toString().length());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+            }catch(JSONException e) {
+            	e.printStackTrace();
+            }
+            
+        
+	        
+	        
+		// TODO Auto-generated method stub
+		
+	}
+	private void handleGetRequest(HttpExchange httpExchange) throws IOException {
 	        UsuarioController controller = new UsuarioController();
 	        
 	        String request_uri = httpExchange.getRequestURI().toString();
@@ -45,7 +170,7 @@ public class UsuarioHttpHandler implements HttpHandler {
 	        if(request_uri.split("/").length <= 2){
 	            JSONArray json_array = null;
 	            try {
-	                json_array = controller.Index();
+	                json_array = controller.index();
 	                httpExchange.sendResponseHeaders(200, json_array.toString().length());
 	                outStream.write(json_array.toString().getBytes());
 	            } catch (SQLException ex1) {

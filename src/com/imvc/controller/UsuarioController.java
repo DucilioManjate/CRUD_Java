@@ -62,7 +62,7 @@ public class UsuarioController {
 	        
 	        
 	    }
-	    public JSONArray Index() throws SQLException{
+	    public JSONArray index() throws SQLException{
 	        Usuario usuario = new Usuario();
 	        List<Usuario> usuarios = usuario.All();
 	        JSONArray json = new JSONArray();
@@ -71,5 +71,31 @@ public class UsuarioController {
 	        });
 	        return json;
 	    }
+	    public JSONObject delete (int codigo) throws SQLException, JSONException{
+	    	System.out.println("passou pelo controle");
+	    	Usuario usuario = new Usuario();
+	        try {
+	        	usuario.read(codigo);
+	        	System.out.println("deve encontrar : " +usuario);
+	        	usuario.delete();
+	            return UsuarioToJson(usuario);
+	        } catch (Exception ex) {
+	            JSONObject json = new JSONObject();
+	            json.put("erro", ex.getMessage());
+	            return json;
+	        }
 
+	    }
+	    public JSONObject update(JSONObject json, int codigo) throws SQLException, Exception{
+	        Usuario usuario = jsonToUsuario(json);
+	        Usuario user = new Usuario(); 
+	        user.read(codigo);
+	        user.setEmail(usuario.getEmail());
+	        user.setSenha(usuario.getSenha());
+	        user.setCpf(usuario.getCpf());
+	        user.update();
+	       
+	        return UsuarioToJson(user);
+	    }
+	    
 }
